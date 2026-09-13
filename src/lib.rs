@@ -3,6 +3,8 @@
 //! Sapling 차폐 트랜잭션을 밑바닥부터 만들며 배우는 학습용 crate.
 //! 유닛이 끝날 때마다 `pub mod`가 하나씩 늘어난다.
 
+pub mod value;
+
 #[cfg(test)]
 mod u00_first_green {
     use ff::PrimeField as _;

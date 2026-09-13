@@ -9,7 +9,7 @@ description = "Shielded from Scratch: Sapling shielded transactions built from t
 # 주석 처리된 줄은 해당 유닛에서 주석을 푼다. 컴파일 시간을 유닛이 필요한 만큼만 쓰기 위해서다.
 ff = "0.13"                          # U00, U02~
 bls12_381 = "0.8"                    # U00, U03~
-# zcash_protocol = "0.10.5"          # U01, U22
+# zcash_protocol: U01에서는 대조용이라 [dev-dependencies]에 있다. U22에서 브랜치 ID 상수가 필요해지면 여기로 올린다.
 # group = "0.13"                     # U04
 # jubjub = "0.10"                    # U04
 # pasta_curves = "0.5.2"             # Part 1 아이언우드 박스
@@ -23,3 +23,6 @@ bls12_381 = "0.8"                    # U00, U03~
 # bellman = "0.14"                   # U16
 # orchard = "0.15.5"                 # Part 2 박스, U29
 # zcash_primitives = "0.30.1"        # U22~24 대조, U30
+
+[dev-dependencies]
+zcash_protocol = "0.10.5"            # U01 대조 기준 (테스트 전용)
