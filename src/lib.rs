@@ -4,6 +4,7 @@
 //! 유닛이 끝날 때마다 `pub mod`가 하나씩 늘어난다.
 
 pub mod value;
+pub mod field;
 
 #[cfg(test)]
 mod u00_first_green {
