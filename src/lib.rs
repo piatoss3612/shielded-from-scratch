@@ -5,6 +5,7 @@
 
 pub mod value;
 pub mod field;
+pub mod scalar;
 
 #[cfg(test)]
 mod u00_first_green {
@@ -20,7 +21,5 @@ mod u00_first_green {
             bls12_381::Scalar::MODULUS.trim_start_matches("0x"),
             SPEC_R.trim_start_matches("0x")
         );
-
-        // todo!("U00: bls12_381::Scalar 의 MODULUS 가 SPEC_R 과 같은지 assert_eq! 로 확인")
     }
 }

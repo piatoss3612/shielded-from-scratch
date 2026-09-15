@@ -11,7 +11,7 @@ ff = "0.13"                          # U00, U02~
 bls12_381 = "0.8"                    # U00, U03~
 # zcash_protocol: U01에서는 대조용이라 [dev-dependencies]에 있다. U22에서 브랜치 ID 상수가 필요해지면 여기로 올린다.
 # group = "0.13"                     # U04
-# jubjub = "0.10"                    # U04
+jubjub = "0.10"                     # U03 s2 (Fq == Scalar 확인), U04
 # pasta_curves = "0.5.2"             # Part 1 아이언우드 박스
 # blake2b_simd = "1"                 # U07
 # blake2s_simd = "1"                 # U07
