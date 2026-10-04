@@ -45,7 +45,7 @@ Rust 문법 질문(derive, `.ok()`, 튜플 구조체 필드가 private인 이유
 
 ## 브랜치와 커밋
 
-월드 하나에 브랜치 하나(`wNN-slug`, NN은 v3 월드 번호)를 직전 월드 브랜치 끝에서 딴다. W1은 `w01-amount`이고 main에서 땄다. v2 때의 `uNN` 브랜치와 태그 `v2-archive`는 보관용이라 이름도 내용도 건드리지 않는다. 커밋은 레벨당 하나이고 레벨 ID로 시작한다(`L02: Zatoshis newtype with checked constructor`). 보스를 깨면 main에 올리기 전에 README를 `chore:` 커밋 하나로 맞춘다. '지금 여기'를 다음 월드와 그 보스로 바꾸고, 트로피 선반에서 깬 월드의 빈 칸(`assets/trophy-slot.svg`)을 `assets/trophy.svg`(alt는 `깬 월드: W1 금액` 꼴)로 바꾼 뒤 그 오른쪽에 다음 월드의 빈 칸을 하나만 두고, 선반 아래 줄을 '다음 칸은 W2 보스 L12에서 채워진다' 꼴로 고친다. 빈 칸은 언제나 하나이고 전체나 남은 월드 수는 쓰지 않는다. 배너에는 월드에 묶인 문구가 없어 다시 만들지 않는다. 그다음 그 월드 브랜치를 main에 fast-forward하고 push한다. squash하지 않는다. 테스트 이름은 레벨 번호가 아니라 개념으로 짓는다.
+월드 하나에 브랜치 하나(`wNN-slug`, NN은 v3 월드 번호)를 직전 월드 브랜치 끝에서 딴다. W1은 `w01-amount`이고 main에서 땄다. v2 때의 `uNN` 브랜치와 태그 `v2-archive`는 보관용이라 이름도 내용도 건드리지 않는다. 커밋은 레벨당 하나이고 레벨 ID로 시작한다(`L02: Zatoshis newtype with checked constructor`). 보스를 깨면 main에 올리기 전에 README를 `chore:` 커밋 하나로 맞춘다. README는 영어로 쓰고, 월드와 보스 이름도 영어로 옮긴다(W1 Amounts, L05 Match the answer key). 'Where I am now'를 다음 월드와 그 보스로 바꾸고, 트로피 선반에서 깬 월드의 빈 칸(`assets/trophy-slot.svg`)을 `assets/trophy.svg`(alt는 `Cleared world: W1 Amounts` 꼴)로 바꾼 뒤 그 오른쪽에 다음 월드의 빈 칸(alt `Empty slot: W2 …`)을 하나만 두고, 선반 아래 줄을 `The next slot fills at the W2 boss, L12.` 꼴로 고친다. 빈 칸은 언제나 하나이고 전체나 남은 월드 수는 쓰지 않는다. 배너에는 월드에 묶인 문구가 없어 다시 만들지 않는다. 그다음 그 월드 브랜치를 main에 fast-forward하고 push한다. squash하지 않는다. 테스트 이름은 레벨 번호가 아니라 개념으로 짓는다.
 
 ## 다이제스트
 

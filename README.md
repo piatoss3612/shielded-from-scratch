@@ -1,94 +1,93 @@
 <p align="center">
-  <img src="assets/banner.svg" width="100%" alt="Shielded from Scratch. 밤, 등불을 든 고양이 기사 옆에서 둥근 방패가 한 칸씩 지어지고 있다.">
+  <img src="assets/banner.svg" width="100%" alt="Shielded from Scratch: at night, a cat knight holding a lantern stands next to a round shield being built one block at a time.">
 </p>
 
 <p align="center">
-  Sapling shielded transactions, built from scratch in Rust, one small level at a time.<br>
-  <sub>작은 레벨 하나씩, 손으로 짓는 차폐 트랜잭션.</sub>
+  Zcash Sapling shielded transactions, built from scratch in Rust, one small level at a time.
 </p>
 
-## 이건 뭔가
+## What this is
 
-Zcash의 Sapling 차폐 트랜잭션을 Rust로 밑바닥부터 지어 보는 학습 레포다. 금액 타입 하나에서 시작해 한 칸씩 쌓는다. 끝에는 내 손으로 만든 Ironwood 트랜잭션이 로컬 regtest에서 블록에 담긴다.
+A learning repo: I'm building Zcash Sapling shielded transactions from scratch in Rust. It starts from a single amount type and grows one piece at a time. At the end, an Ironwood transaction I built by hand gets mined on a local regtest.
 
-공부한 흔적이지 라이브러리가 아니다. 이 코드로 진짜 돈을 다루지 않는다.
+This is a study log, not a library. Don't use this code with real money.
 
-## 어떻게 나아가나
+## How it works
 
-걸음의 단위는 레벨이다. 레벨 하나는 30~45분이고, 새로 배우는 것도 통과 기준도 하나다. 이름 있는 테스트가 초록이 되면 깃발이 선다.
+Each step here is a level. A level takes 30 to 45 minutes and has exactly one new idea and one pass condition: a named test that turns green.
 
-레벨이 몇 개 모이면 월드가 된다. 월드 끝에는 보스가 있다. 보스는 새 개념 없이 그 월드를 묶어 남는 것 하나를 만든다.
+A few levels make a world, and each world ends with a boss. The boss adds no new idea; it ties the world together into one finished piece that lasts.
 
-레벨을 푸는 방식은 여덟 가지다. 보기 · 예측 · 고치기 · 쓰기 · 써 보기 · 대조 · 깨기 · 보스. 진짜 Zcash crate나 테스트 벡터는 네 레벨을 넘기지 않고 다시 나온다.
+There are eight kinds of level: see, predict, modify, write, try (call a real Zcash crate or test vector), match (byte for byte against a crate or test vector), break, and boss. A real Zcash crate or test vector shows up at least once every four levels.
 
-튜터는 Claude Code다. 설명하고, 테스트와 뼈대를 깔고, 막히면 힌트를 준다. 핵심 줄은 내가 쓰고, 그 줄을 한 문장으로 설명할 수 있어야 레벨이 닫힌다. 튜터와의 약속은 [CLAUDE.md](CLAUDE.md)에, 지나온 길은 [PROGRESS.md](PROGRESS.md)에 적는다.
+The tutor is Claude Code. It explains, sets up tests and scaffolding, and offers hints when I'm stuck. I write the core lines myself, and a level only counts as cleared when I can explain each of them in one sentence. The tutor contract is in [CLAUDE.md](CLAUDE.md) and my progress log is in [PROGRESS.md](PROGRESS.md). Both are in Korean.
 
-## 지금 여기
+## Where I am now
 
-W1 금액. Zcash가 돈을 세는 단위 zatoshi로 금액 타입을 만든다. 이 월드의 보스는 L05 「정답지와 대조」다. 내 타입이 `zcash_protocol`과 같은 답을 내면 깬다.
+**W1 · Amounts.** I'm building an amount type that counts in zatoshis, the smallest unit of ZEC. This world's boss is L05, *Match the answer key*: it's cleared when my type gives the same answers as `zcash_protocol`.
 
-지금 레벨과 막힌 곳은 [PROGRESS.md](PROGRESS.md)에 있다. 이 레포에서 Claude Code에게 "튜터 세션 시작"이라고 말하면 그 레벨이 열린다.
+The current level and anything I'm stuck on are in [PROGRESS.md](PROGRESS.md). Saying "튜터 세션 시작" (start a tutor session) to Claude Code in this repo opens that level.
 
-## 트로피 선반
+## Trophy shelf
 
-월드를 깨면 한 칸씩 채운다.
+Each cleared world fills one slot.
 
 <p>
-  <img src="assets/trophy-slot.svg" width="64" alt="빈 칸: W1 금액" title="W1 금액">
+  <img src="assets/trophy-slot.svg" width="64" alt="Empty slot: W1 Amounts" title="W1 Amounts">
 </p>
 
-첫 칸은 W1 보스 L05에서 채워진다.
+The first slot fills at the W1 boss, L05.
 
 <details>
-<summary>가는 길의 이정표</summary>
+<summary>Milestones along the way</summary>
 
 <br>
 
-- M1 곡선 위의 점을 더하고 곱하고, 32바이트로 접었다 편다. <sub>Jubjub 점 산술</sub>
-- M2 내가 만든 해시로 빈 노트 트리의 뿌리를 낸다. <sub>Pedersen hash</sub>
-- M3 노트 하나의 내용을 가린 채로 약속한다. <sub>note commitment</sub>
-- M4 받는 사람이 열 수 있는 노트를 만든다. <sub>note encryption</sub>
-- M5 쓸 때마다 다른 얼굴로 서명한다. <sub>재랜덤화 서명, RedJubjub</sub>
-- M6 첫 영지식 증명을 만들고, 제약 하나를 빼면 거짓도 통과한다는 걸 직접 본다. <sub>Groth16, under-constrained</sub>
-- M7 내가 지은 회로로 출력이 올바르다는 걸 증명한다. <sub>Output 회로</sub>
-- M8 노트를 쓰는 증명을 만든다. 회로는 crate 것을 빌린다. <sub>Spend description</sub>
-- M9 차폐 송금 한 건을 만들고, 내가 만든 검증기로 통과시킨다. <sub>z→z 트랜잭션</sub>
-- M10 받은 노트를 찾아 다시 보내는 작은 지갑이 두 바퀴 돈다. <sub>Sapling 지갑</sub>
-- M11 손으로 만든 Ironwood 트랜잭션이 로컬 regtest에서 채굴된다. <sub>NU6.3, v6 트랜잭션</sub>
+- **M1** Add and multiply points on a curve, and compress them to 32 bytes and back. <sub>Jubjub point arithmetic</sub>
+- **M2** Compute the root of an empty note tree with a hash I wrote. <sub>Pedersen hash</sub>
+- **M3** Commit to a note while hiding what's in it. <sub>note commitment</sub>
+- **M4** Encrypt a note so the recipient can read it. <sub>note encryption</sub>
+- **M5** Sign each spend with a key that looks brand new. <sub>rerandomized signatures, RedJubjub</sub>
+- **M6** Make my first zero-knowledge proof, then remove one constraint and watch a false claim pass. <sub>Groth16, under-constrained circuits</sub>
+- **M7** Prove an output is valid with a circuit I built. <sub>Output circuit</sub>
+- **M8** Make a proof that spends a note, borrowing the crate's circuit. <sub>Spend description</sub>
+- **M9** Build one shielded transfer and pass it through a verifier I wrote. <sub>z→z transaction</sub>
+- **M10** A small wallet finds the notes it received and sends them on, for two full cycles. <sub>Sapling wallet</sub>
+- **M11** A hand-built Ironwood transaction gets mined on a local regtest. <sub>NU6.3, v6 transactions</sub>
 
-M1, M5, M9, M11 뒤에는 거기까지를 정리한 글을 한 편씩 쓴다.
+After M1, M5, M9 and M11, I'll write a post covering everything up to that point.
 
 </details>
 
-## 돌려 보기
+## Running it
 
 ```sh
-# 전체 테스트
+# all tests
 cargo test
 
-# 한 모듈만
+# one module
 cargo test value
 
-# 아직 잠긴 테스트 목록
+# tests that are still locked
 cargo test -- --ignored --list
 ```
 
-빨간 테스트는 언제나 지금 레벨 것뿐이다. 아직 열지 않은 레벨의 테스트는 `#[ignore = "L03"]`처럼 잠가 두고, 그 레벨을 열 때 푼다. 그래서 `cargo test`가 빨갛다면 고장이 아니라 지금 풀 문제다.
+Red tests always belong to the current level. Tests for levels that aren't open yet are locked with an attribute like `#[ignore = "L03"]` and unlocked when their level opens. So a red `cargo test` doesn't mean something is broken; it's the problem in front of me.
 
-툴체인은 `rust-toolchain.toml`의 stable이다.
+The toolchain is stable, pinned in `rust-toolchain.toml`.
 
-## 파일
+## Files
 
-- `src/` 레벨을 깰 때마다 조금씩 자라는 코드
-- `PROGRESS.md` 지금 레벨, 월드 체크리스트, 세션 로그
-- `CLAUDE.md` 튜터와의 약속
-- `Cargo.toml` `ff`/`group` 0.13 생태계에 맞춘 핀. 주석 처리된 crate는 처음 필요한 레벨에서 푼다
-- `rust-toolchain.toml` stable
-- `assets/` 배너와 트로피
+- `src/`: the code, which grows a little with every level
+- `PROGRESS.md`: current level, world checklist, session log
+- `CLAUDE.md`: the tutor contract
+- `Cargo.toml`: versions pinned to the `ff`/`group` 0.13 ecosystem; commented-out crates are enabled at the level that first needs them
+- `rust-toolchain.toml`: stable
+- `assets/`: the banner and trophies
 
-## 고마운 것들
+## Thanks
 
-- [Zcash Protocol Specification](https://zips.z.cash/protocol/protocol.pdf). 모든 정답의 출처.
-- [zcash-test-vectors](https://github.com/zcash/zcash-test-vectors). 대조 레벨의 정답지.
-- [zcash](https://github.com/zcash)와 [zkcrypto](https://github.com/zkcrypto)의 Rust crate들. 손으로 지은 것을 맞춰 보는 기준.
-- 배너의 등불 가디언(Lantern Guardian)은 [piatoss.xyz](https://piatoss.xyz)에서 왔다.
+- [Zcash Protocol Specification](https://zips.z.cash/protocol/protocol.pdf), the source of every answer.
+- [zcash-test-vectors](https://github.com/zcash/zcash-test-vectors), the answer key for the matching levels.
+- The Rust crates from [zcash](https://github.com/zcash) and [zkcrypto](https://github.com/zkcrypto), the yardstick for everything built by hand.
+- The Lantern Guardian in the banner comes from [piatoss.xyz](https://piatoss.xyz).
