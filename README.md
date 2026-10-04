@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="assets/banner.svg" width="100%" alt="Shielded from Scratch: at night, a cat knight holding a lantern stands next to a round shield being built one block at a time.">
+  <img src="assets/banner.svg" width="100%" alt="Shielded from Scratch: Zcash shielded transactions, by hand, in Rust. A pixel-art cat blacksmith hammers a round shield of iron and wood on an anvil by a lantern post, and a dotted path runs from a sapling labeled Sapling to a tree labeled Ironwood.">
 </p>
 
 <p align="center">
-  Zcash Sapling shielded transactions, built from scratch in Rust, one small level at a time.
+  Zcash shielded transactions, built from scratch in Rust, one small level at a time.
 </p>
 
 ## What this is
 
-A learning repo: I'm building Zcash Sapling shielded transactions from scratch in Rust. It starts from a single amount type and grows one piece at a time. At the end, an Ironwood transaction I built by hand gets mined on a local regtest.
+A learning repo: I'm building Zcash shielded transactions from scratch in Rust, Sapling first and then Ironwood. It starts from a single amount type and grows one piece at a time. At the end, an Ironwood transaction I built by hand gets mined on a local regtest.
 
 This is a study log, not a library. Don't use this code with real money.
 
@@ -90,4 +90,4 @@ The toolchain is stable, pinned in `rust-toolchain.toml`.
 - [Zcash Protocol Specification](https://zips.z.cash/protocol/protocol.pdf), the source of every answer.
 - [zcash-test-vectors](https://github.com/zcash/zcash-test-vectors), the answer key for the matching levels.
 - The Rust crates from [zcash](https://github.com/zcash) and [zkcrypto](https://github.com/zkcrypto), the yardstick for everything built by hand.
-- The Lantern Guardian in the banner comes from [piatoss.xyz](https://piatoss.xyz).
+- The blacksmith cat in the banner is drawn after the Lantern Guardian of [piatoss.xyz](https://piatoss.xyz).
