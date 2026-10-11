@@ -4,11 +4,11 @@
 
 /// 1 ZEC가 몇 zatoshi인가.
 /// L01: 0을 맞는 값으로 바꾼다. 긴 숫자는 `100_000`처럼 밑줄로 끊어 써도 된다.
-pub const COIN: u64 = 0;
+pub const COIN: u64 = 100_000_000;
 
 /// Zcash에 존재할 수 있는 최대 금액, 2100만 ZEC를 zatoshi로 적은 값.
 /// L01: 0을 맞는 값으로 바꾼다. 위의 `COIN`을 써도 된다.
-pub const MAX_MONEY: u64 = 0;
+pub const MAX_MONEY: u64 = COIN * 21_000_000;
 
 #[cfg(test)]
 mod tests {
@@ -32,4 +32,8 @@ mod tests {
     //         COIN을 쓰지 않는 이유: MAX_MONEY를 COIN으로 정의했다면 같은 식끼리 비교하게 되어
     //         이 테스트는 절대 빨개지지 않는다. 숫자로 적어야 내 계산을 따로 확인할 수 있다.
     //   모양: #[test] 한 줄, fn 이름() { … } 한 덩어리.
+    #[test]
+    fn max_money_is_21_million_zec() {
+        assert_eq!(MAX_MONEY, 21_000_000 * 100_000_000);
+    }
 }
