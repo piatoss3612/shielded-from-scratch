@@ -6,8 +6,8 @@
 L02 상한이 있는 금액 타입 — 고치기, 35분
 새로 배우는 것: private 필드를 가진 newtype과 Result를 돌려주는 검사 생성자
 본보기: src/value.rs의 튜터 형제 코드 `Percent(u8)::from_u8`(100을 넘으면 Err)
-먼저 할 것: `cargo test value`를 돌려, `Zatoshis` 정의가 없어서 `ZERO`가 컴파일되지 않는 첫 red 보기
-채울 곳: `pub struct Zatoshis(u64);` 한 줄, `from_u64` 본문(상한 검사 후 Ok/Err)
+먼저 할 것: `cargo test value`를 돌려 첫 red(컴파일 에러 "cannot find type `Zatoshis` in this scope")를 보고, `ZERO`와 테스트가 아직 정의되지 않은 타입을 쓰고 있다는 것을 읽기
+채울 곳: `Zatoshis` struct 한 줄(바로 위 derive 줄 앞의 `// `도 지운다), `from_u64` 본문(상한 검사 후 Ok/Err)
 통과 기준: `cargo test value`에서 `from_u64_accepts_zero_and_cap`, `from_u64_rejects_above_cap`이 초록(L01의 3개도 그대로 초록)
 막힌 지점: —
 
