@@ -48,7 +48,8 @@ impl Percent {
 /// 그래서 `MAX_MONEY`를 넘는 `Zatoshis`는 프로그램 어디에도 존재할 수 없다.
 // L02: 아래 derive 줄 앞의 `// `를 지우고, 그 바로 밑에 struct 한 줄을 쓴다.
 //      모양은 위의 `Percent`와 같고, 안에 담는 타입만 `u64`다.
-// #[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub struct Zatoshis(u64);
 
 impl Zatoshis {
     /// 0 zatoshi. `impl` 안에 적은 `const`는 타입에 붙은 상수라 `Zatoshis::ZERO`로 쓴다.
@@ -57,7 +58,11 @@ impl Zatoshis {
     /// `0..=MAX_MONEY` 안이면 `Ok`, 넘으면 `Err(BalanceError::Overflow)`.
     pub fn from_u64(amount: u64) -> Result<Self, BalanceError> {
         // L02: 위 `Percent::from_u8`과 같은 모양으로 본문을 쓴다.
-        todo!("L02 (amount = {amount})")
+        if amount <= MAX_MONEY {
+            Ok(Zatoshis(amount))
+        } else {
+            Err(BalanceError::Overflow)
+        }
     }
 
     /// 안에 든 zatoshi 수를 꺼낸다. 필드가 private이라 모듈 밖에서 값을 읽는 길은 이것뿐이다.
