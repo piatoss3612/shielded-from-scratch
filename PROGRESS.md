@@ -6,9 +6,9 @@
 L03 음수 거르기와 TryFrom — 쓰기, 30분
 새로 배우는 것: `TryFrom<u64>` 트레이트를 구현해 기존 검사 생성자 `from_u64`에 위임하기
 본보기: src/value.rs의 튜터 형제 코드 `impl TryFrom<u8> for Percent`(`from_u8`에 위임)와 내가 L02에 쓴 `from_u64`
-먼저 할 것: `cargo test value`를 돌려 첫 red(`Zatoshis`에 `try_from`이 없다는 컴파일 에러)를 보기
+먼저 할 것: `cargo test value`를 돌려 첫 red(컴파일 에러 "the trait bound `Zatoshis: TryFrom<u64>` is not satisfied")를 보기. 함께 나오는 `From<u64>`·`Infallible` 에러도 같은 원인이다
 채울 곳: `impl TryFrom<u64> for Zatoshis` 블록(`Percent` 것과 같은 모양), `from_nonnegative_i64` 본문(음수면 `Err(Underflow)`, 아니면 `from_u64`에 맡김)
-통과 기준: `cargo test value`에서 `negative_is_underflow`, `try_from_u64_delegates`가 초록(앞의 6개도 그대로 초록)
+통과 기준: `cargo test value`에서 `negative_is_underflow`, `try_from_u64_delegates`가 초록(나머지도 그대로 초록이라 모두 9 passed)
 막힌 지점: —
 
 ## W1 금액 (2/5)

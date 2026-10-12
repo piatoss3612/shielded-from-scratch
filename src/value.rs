@@ -18,6 +18,8 @@ pub const MAX_MONEY: u64 = COIN * 21_000_000;
 pub enum BalanceError {
     /// `MAX_MONEY`를 넘었다.
     Overflow,
+    /// 0보다 작다.
+    Underflow,
 }
 
 /// 본보기(튜터가 써 둠). 0부터 100까지만 담는 백분율. Zcash와는 상관없고, 아래 `Zatoshis`와 모양이 같아서 둔다.
@@ -42,12 +44,24 @@ impl Percent {
     }
 }
 
+/// 본보기(튜터가 써 둠). `u8`에서 `Percent`로 가는, 실패할 수도 있는 변환.
+///
+/// 트레이트는 "이 이름의 함수를 이런 모양으로 갖고 있다"는 약속이고, `impl 트레이트 for 타입`으로 그 약속을 지킨다.
+/// `TryFrom<u8>`은 표준 라이브러리의 약속이라, 구현해 두면 누구나 `Percent::try_from(50u8)`이라는 같은 이름으로 부른다.
+/// `type Error = …`는 실패할 때 돌려줄 오류 타입을 정하고, 아래 `Self::Error`가 그것을 가리킨다.
+/// 검사는 새로 쓰지 않고 이미 있는 `from_u8`에 맡긴다(위임). 그리고 `TryFrom`을 구현하면 `50u8.try_into()`도 저절로 생긴다.
+impl TryFrom<u8> for Percent {
+    type Error = BalanceError;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        Self::from_u8(value)
+    }
+}
+
 /// 0 이상 `MAX_MONEY` 이하의 zatoshi 금액.
 ///
 /// 필드가 private이라 이 모듈 밖에서는 `from_u64`를 거쳐야만 만들 수 있다.
 /// 그래서 `MAX_MONEY`를 넘는 `Zatoshis`는 프로그램 어디에도 존재할 수 없다.
-// L02: 아래 derive 줄 앞의 `// `를 지우고, 그 바로 밑에 struct 한 줄을 쓴다.
-//      모양은 위의 `Percent`와 같고, 안에 담는 타입만 `u64`다.
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Zatoshis(u64);
 
@@ -57,7 +71,6 @@ impl Zatoshis {
 
     /// `0..=MAX_MONEY` 안이면 `Ok`, 넘으면 `Err(BalanceError::Overflow)`.
     pub fn from_u64(amount: u64) -> Result<Self, BalanceError> {
-        // L02: 위 `Percent::from_u8`과 같은 모양으로 본문을 쓴다.
         if amount <= MAX_MONEY {
             Ok(Zatoshis(amount))
         } else {
@@ -65,11 +78,21 @@ impl Zatoshis {
         }
     }
 
+    /// 음수면 `Err(BalanceError::Underflow)`, 그 밖에는 `from_u64`와 같다.
+    ///
+    /// `amount as u64`는 `i64` 값을 `u64`로 옮긴다. 음수가 아님을 확인한 뒤라면 값이 그대로 옮겨진다.
+    pub fn from_nonnegative_i64(amount: i64) -> Result<Self, BalanceError> {
+        // L03: 음수를 먼저 거르고, 나머지 검사는 `from_u64`에 맡긴다.
+        todo!("L03 (amount = {amount})")
+    }
+
     /// 안에 든 zatoshi 수를 꺼낸다. 필드가 private이라 모듈 밖에서 값을 읽는 길은 이것뿐이다.
     pub fn into_u64(self) -> u64 {
         self.0
     }
 }
+
+// L03: 여기에 `impl TryFrom<u64> for Zatoshis` 블록을 쓴다. 모양은 위의 `impl TryFrom<u8> for Percent`와 같다.
 
 #[cfg(test)]
 mod tests {
@@ -113,5 +136,32 @@ mod tests {
     fn from_u64_rejects_above_cap() {
         assert_eq!(Zatoshis::from_u64(MAX_MONEY + 1), Err(BalanceError::Overflow));
         assert_eq!(Zatoshis::from_u64(u64::MAX), Err(BalanceError::Overflow));
+    }
+
+    /// 본보기(튜터가 써 둠). `Percent::try_from`은 `from_u8`과 같은 답을 내고, `try_into()`로도 부를 수 있다.
+    #[test]
+    fn percent_try_from_delegates() {
+        // 숫자 뒤의 `u8`은 그 숫자의 타입을 정해 준다.
+        assert_eq!(Percent::try_from(100u8), Percent::from_u8(100));
+        // `try_into()`는 무엇으로 바꿀지를 왼쪽에 적은 타입을 보고 정한다.
+        let p: Result<Percent, BalanceError> = 101u8.try_into();
+        assert_eq!(p, Err(BalanceError::Overflow));
+    }
+
+    /// L03 게이트(튜터가 써 둠). 음수는 `Underflow`, 상한을 넘으면 그대로 `Overflow`.
+    #[test]
+    fn negative_is_underflow() {
+        assert_eq!(Zatoshis::from_nonnegative_i64(-1), Err(BalanceError::Underflow));
+        assert_eq!(Zatoshis::from_nonnegative_i64(i64::MIN), Err(BalanceError::Underflow));
+        assert_eq!(Zatoshis::from_nonnegative_i64(7).map(Zatoshis::into_u64), Ok(7));
+        assert_eq!(Zatoshis::from_nonnegative_i64(i64::MAX), Err(BalanceError::Overflow));
+    }
+
+    /// L03 게이트(튜터가 써 둠). `Zatoshis::try_from`은 `from_u64`와 같은 답을 낸다.
+    #[test]
+    fn try_from_u64_delegates() {
+        assert_eq!(Zatoshis::try_from(5u64), Zatoshis::from_u64(5));
+        let z: Result<Zatoshis, BalanceError> = (MAX_MONEY + 1).try_into();
+        assert_eq!(z, Err(BalanceError::Overflow));
     }
 }
