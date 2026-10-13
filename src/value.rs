@@ -101,7 +101,6 @@ impl Zatoshis {
     ///
     /// `amount as u64`는 `i64` 값을 `u64`로 옮긴다. 음수가 아님을 확인한 뒤라면 값이 그대로 옮겨진다.
     pub fn from_nonnegative_i64(amount: i64) -> Result<Self, BalanceError> {
-        // L03: 음수를 먼저 거르고, 나머지 검사는 `from_u64`에 맡긴다.
         if amount < 0 {
             Err(BalanceError::Underflow)
         } else {
@@ -290,19 +289,25 @@ mod tests {
             assert_eq!(ours, theirs, "from_u64({v})");
         }
 
-        // L05: 여기에 이중 `for` 루프를 쓴다. `samples`에서 `a`와 `b`를 하나씩 골라 모든 쌍에 대해,
-        //      내 쪽 `from_u64(a)`, `from_u64(b)`가 둘 다 `Ok`인 쌍만 골라 `a + b`와 `a - b`를 양쪽에서 비교한다.
-        //      `if let 모양 = 값 { … }`은 값이 그 모양과 맞을 때만 블록을 실행하고, 모양 안의 이름으로 값을 꺼낸다.
-        //      튜플 모양도 된다: `if let (Ok(x), Ok(y)) = (…, …) { … }`는 둘 다 `Ok`일 때만 `x`, `y`를 꺼낸다.
-        //      `Option`에도 `.map`이 있어서 `(x + y).map(Zatoshis::into_u64)`처럼 쓴다. `if let`이나 `match`면 충분하다.
+        // 학습자가 쓴 이중 루프(L05). 내 쪽 두 값을 만들 수 있는 쌍만 골라 `+`와 `-`를 양쪽에서 비교한다.
+        // `Ok(oa)`는 모양 맞추기(패턴)다. 결과가 `Ok(…)` 모양이면 괄호 안의 값에 `oa`라는 이름을 붙인다.
+        // `if let (Ok(oa), Ok(ob)) = (…, …)`는 둘 다 `Ok`일 때만 블록에 들어가고, 하나라도 `Err`면 건너뛴다.
         for &a in &samples {
             for &b in &samples {
                 if let (Ok(oa), Ok(ob)) = (Zatoshis::from_u64(a), Zatoshis::from_u64(b)) {
                     let ra = Ref::from_u64(a).unwrap();
                     let rb = Ref::from_u64(b).unwrap();
 
-                    assert_eq!((oa + ob).map(Zatoshis::into_u64), (ra + rb).map(Ref::into_u64), "{a} + {b}");
-                    assert_eq!((oa - ob).map(Zatoshis::into_u64), (ra - rb).map(Ref::into_u64), "{a} - {b}");
+                    assert_eq!(
+                        (oa + ob).map(Zatoshis::into_u64),
+                        (ra + rb).map(Ref::into_u64),
+                        "{a} + {b}"
+                    );
+                    assert_eq!(
+                        (oa - ob).map(Zatoshis::into_u64),
+                        (ra - rb).map(Ref::into_u64),
+                        "{a} - {b}"
+                    );
                 }
             }
         }
