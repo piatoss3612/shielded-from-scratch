@@ -24,7 +24,7 @@ The tutor is Claude Code. It explains, sets up tests and scaffolding, and offers
 
 ## Where I am now
 
-**W1 · Amounts.** I'm building an amount type that counts in zatoshis, the smallest unit of ZEC. This world's boss is L05, *Match the answer key*: it's cleared when my type gives the same answers as `zcash_protocol`.
+**W2 · Clock Arithmetic.** I'm building numbers that wrap around at a prime P, the way hours wrap around a clock. Zcash proofs do all their arithmetic this way. This world's boss is L12, *My Fp is a field*: it's cleared when my `Fp<97>` and the real proof field's `Scalar` pass the same checks.
 
 The current level and anything I'm stuck on are in [PROGRESS.md](PROGRESS.md). Saying "튜터 세션 시작" (start a tutor session) to Claude Code in this repo opens that level.
 
@@ -33,10 +33,11 @@ The current level and anything I'm stuck on are in [PROGRESS.md](PROGRESS.md). S
 Each cleared world fills one slot.
 
 <p>
-  <img src="assets/trophy-slot.svg" width="64" alt="Empty slot: W1 Amounts" title="W1 Amounts">
+  <img src="assets/trophy.svg" width="64" alt="Cleared world: W1 Amounts" title="W1 Amounts">
+  <img src="assets/trophy-slot.svg" width="64" alt="Empty slot: W2 Clock Arithmetic" title="W2 Clock Arithmetic">
 </p>
 
-The first slot fills at the W1 boss, L05.
+The next slot fills at the W2 boss, L12.
 
 <details>
 <summary>Milestones along the way</summary>
