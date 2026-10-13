@@ -128,8 +128,7 @@ impl Add for Zatoshis {
     type Output = Option<Zatoshis>;
 
     fn add(self, rhs: Zatoshis) -> Option<Zatoshis> {
-        // L04: 위 `impl Add for Percent`와 같은 모양으로 한 줄을 쓴다.
-        todo!("L04 ({} + {})", self.0, rhs.0)
+        Self::try_from(self.0.checked_add(rhs.into_u64())?).ok()
     }
 }
 
@@ -139,7 +138,7 @@ impl Sub for Zatoshis {
 
     fn sub(self, rhs: Zatoshis) -> Option<Zatoshis> {
         // L04: `add`와 같은 모양으로 한 줄을 쓴다. 뺄셈이 0 아래로 내려가는 경우를 막는 것이 핵심이다.
-        todo!("L04 ({} - {})", self.0, rhs.0)
+        Self::try_from(self.0.checked_sub(rhs.into_u64())?).ok()
     }
 }
 
