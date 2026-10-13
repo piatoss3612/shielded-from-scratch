@@ -295,6 +295,16 @@ mod tests {
         //      `if let 모양 = 값 { … }`은 값이 그 모양과 맞을 때만 블록을 실행하고, 모양 안의 이름으로 값을 꺼낸다.
         //      튜플 모양도 된다: `if let (Ok(x), Ok(y)) = (…, …) { … }`는 둘 다 `Ok`일 때만 `x`, `y`를 꺼낸다.
         //      `Option`에도 `.map`이 있어서 `(x + y).map(Zatoshis::into_u64)`처럼 쓴다. `if let`이나 `match`면 충분하다.
-        todo!("L05")
+        for &a in &samples {
+            for &b in &samples {
+                if let (Ok(oa), Ok(ob)) = (Zatoshis::from_u64(a), Zatoshis::from_u64(b)) {
+                    let ra = Ref::from_u64(a).unwrap();
+                    let rb = Ref::from_u64(b).unwrap();
+
+                    assert_eq!((oa + ob).map(Zatoshis::into_u64), (ra + rb).map(Ref::into_u64), "{a} + {b}");
+                    assert_eq!((oa - ob).map(Zatoshis::into_u64), (ra - rb).map(Ref::into_u64), "{a} - {b}");
+                }
+            }
+        }
     }
 }
