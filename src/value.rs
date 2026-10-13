@@ -83,7 +83,11 @@ impl Zatoshis {
     /// `amount as u64`는 `i64` 값을 `u64`로 옮긴다. 음수가 아님을 확인한 뒤라면 값이 그대로 옮겨진다.
     pub fn from_nonnegative_i64(amount: i64) -> Result<Self, BalanceError> {
         // L03: 음수를 먼저 거르고, 나머지 검사는 `from_u64`에 맡긴다.
-        todo!("L03 (amount = {amount})")
+        if amount < 0 {
+            Err(BalanceError::Underflow)
+        } else {
+            Self::from_u64(amount as u64)
+        }
     }
 
     /// 안에 든 zatoshi 수를 꺼낸다. 필드가 private이라 모듈 밖에서 값을 읽는 길은 이것뿐이다.
@@ -93,6 +97,13 @@ impl Zatoshis {
 }
 
 // L03: 여기에 `impl TryFrom<u64> for Zatoshis` 블록을 쓴다. 모양은 위의 `impl TryFrom<u8> for Percent`와 같다.
+impl TryFrom<u64> for Zatoshis {
+    type Error = BalanceError;
+
+    fn try_from(value: u64) -> Result<Self, Self::Error> {
+        Self::from_u64(value)
+    }
+ }
 
 #[cfg(test)]
 mod tests {
