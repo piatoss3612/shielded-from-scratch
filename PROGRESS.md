@@ -8,7 +8,7 @@ L05 정답지와 대조 (보스) — 보스, 35분
 본보기: `agrees_with_zcash_protocol` 안에 튜터가 풀어 둔 바깥 `for` 루프(`from_u64` 결과 대조)
 먼저 할 것: `cargo test value`를 돌려 `agrees_with_zcash_protocol`이 `todo` 패닉으로 빨간 것을 보기
 채울 곳: 같은 테스트 안의 이중 `for` 루프(둘 다 `Ok`인 쌍만 `if let`으로 골라 `+`와 `-`의 결과를 `into_u64`로 비교)
-통과 기준: `cargo test value`에서 `agrees_with_zcash_protocol`이 초록(나머지도 그대로 초록)
+통과 기준: `cargo test value`에서 `agrees_with_zcash_protocol`이 초록(나머지도 그대로 초록이라 모두 13 passed)
 막힌 지점: —
 
 ## W1 금액 (4/5)

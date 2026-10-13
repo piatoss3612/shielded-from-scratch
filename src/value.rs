@@ -137,7 +137,6 @@ impl Sub for Zatoshis {
     type Output = Option<Zatoshis>;
 
     fn sub(self, rhs: Zatoshis) -> Option<Zatoshis> {
-        // L04: `add`와 같은 모양으로 한 줄을 쓴다. 뺄셈이 0 아래로 내려가는 경우를 막는 것이 핵심이다.
         Self::try_from(self.0.checked_sub(rhs.into_u64())?).ok()
     }
 }
@@ -260,5 +259,42 @@ mod tests {
         assert_eq!(two - one, Some(one));
         assert_eq!(one - one, Some(Zatoshis::ZERO));
         assert_eq!(one - two, None);
+    }
+
+    /// 보스(L05, 튜터 뼈대 + 학습자 이중 루프). 같은 입력에 진짜 `zcash_protocol`과 같은 답을 내는지 맞춰 본다.
+    #[test]
+    fn agrees_with_zcash_protocol() {
+        // `as Ref`는 가져온 이름에 별명을 붙인다. 진짜 crate의 타입도 이름이 `Zatoshis`라서
+        // 그대로 가져오면 내 `Zatoshis`와 겹친다. 이 테스트 안에서는 진짜 쪽을 `Ref`라고 부른다.
+        use zcash_protocol::value::Zatoshis as Ref;
+
+        // 경계 근처의 값들: 0, 1, 1 ZEC, 상한 바로 아래, 상한, 상한 바로 위, u64의 끝.
+        let samples = [
+            0u64,
+            1,
+            COIN,
+            MAX_MONEY - 1,
+            MAX_MONEY,
+            MAX_MONEY + 1,
+            u64::MAX,
+        ];
+
+        // 본보기(튜터가 써 둠): 만들기 대조.
+        // `for &v in &samples`는 배열을 빌려 와서 원소를 하나씩 `v`로 꺼낸다.
+        // 양쪽의 `Zatoshis`와 오류 타입은 서로 다른 타입이라 `==`로 바로 비교할 수 없다. 그래서 둘 다
+        // `.map(…into_u64)`로 담긴 수를 꺼내고 `.ok()`로 오류 이유를 버려 `Option<u64>`끼리 비교한다.
+        // `assert_eq!`의 세 번째 인자는 실패할 때 함께 찍을 메시지이고, `{v}`에 그때의 값이 들어간다.
+        for &v in &samples {
+            let ours = Zatoshis::from_u64(v).map(Zatoshis::into_u64).ok();
+            let theirs = Ref::from_u64(v).map(Ref::into_u64).ok();
+            assert_eq!(ours, theirs, "from_u64({v})");
+        }
+
+        // L05: 여기에 이중 `for` 루프를 쓴다. `samples`에서 `a`와 `b`를 하나씩 골라 모든 쌍에 대해,
+        //      내 쪽 `from_u64(a)`, `from_u64(b)`가 둘 다 `Ok`인 쌍만 골라 `a + b`와 `a - b`를 양쪽에서 비교한다.
+        //      `if let 모양 = 값 { … }`은 값이 그 모양과 맞을 때만 블록을 실행하고, 모양 안의 이름으로 값을 꺼낸다.
+        //      튜플 모양도 된다: `if let (Ok(x), Ok(y)) = (…, …) { … }`는 둘 다 `Ok`일 때만 `x`, `y`를 꺼낸다.
+        //      `Option`에도 `.map`이 있어서 `(x + y).map(Zatoshis::into_u64)`처럼 쓴다. `if let`이나 `match`면 충분하다.
+        todo!("L05")
     }
 }
