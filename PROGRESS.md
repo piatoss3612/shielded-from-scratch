@@ -8,7 +8,7 @@ L04 금액 덧셈·뺄셈 — 쓰기, 35분
 본보기: src/value.rs의 튜터 형제 코드 `impl Add for Percent`(`checked_add`, `?`, `.ok()`)
 먼저 할 것: `cargo test value`를 돌려 `add_stops_at_cap`, `sub_never_goes_negative`가 `todo` 패닉으로 빨간 것을 보기
 채울 곳: `impl Add for Zatoshis`의 `add` 본문 한 줄, `impl Sub for Zatoshis`의 `sub` 본문 한 줄
-통과 기준: `cargo test value`에서 `add_stops_at_cap`, `sub_never_goes_negative`가 초록(나머지도 그대로 초록)
+통과 기준: `cargo test value`에서 `add_stops_at_cap`, `sub_never_goes_negative`가 초록(나머지도 그대로 초록이라 모두 12 passed)
 막힌 지점: —
 
 ## W1 금액 (3/5)

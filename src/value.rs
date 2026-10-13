@@ -2,6 +2,9 @@
 //!
 //! zatoshi는 ZEC의 가장 작은 단위다. Zcash는 금액을 전부 zatoshi 정수로 센다.
 
+// `+`와 `-` 연산자에 붙은 트레이트. 구현해 두면 `a + b`, `a - b`가 그 타입의 `add`, `sub` 함수를 부른다.
+use std::ops::{Add, Sub};
+
 /// 1 ZEC가 몇 zatoshi인가.
 /// 긴 숫자는 `100_000_000`처럼 밑줄로 끊어 써도 된다. Rust는 숫자 속 밑줄을 무시한다.
 pub const COIN: u64 = 100_000_000;
@@ -58,6 +61,22 @@ impl TryFrom<u8> for Percent {
     }
 }
 
+/// 본보기(튜터가 써 둠). 두 `Percent`의 합. 100을 넘으면 `None`.
+impl Add for Percent {
+    /// `+`의 결과 타입. 합이 상한을 넘을 수 있어서 `Percent`가 아니라 `Option<Percent>`로 둔다.
+    /// `Option<T>`는 값이 있으면 `Some(값)`, 없으면 `None`인 타입이다.
+    type Output = Option<Percent>;
+
+    /// `checked_add`는 정수끼리 더하다 그 타입의 끝을 넘으면 `None`, 아니면 `Some(합)`을 준다.
+    /// 정수 타입에는 `checked_sub`(0 아래로 내려가면 `None`)도 같은 모양으로 있다.
+    /// `?`는 `None`이면 그 자리에서 함수 전체가 `None`을 돌려주고 끝나고, `Some`이면 안의 값을 꺼낸다.
+    /// `.ok()`는 `Result`를 `Option`으로 바꾼다. `Ok(v)`는 `Some(v)`, `Err`는 이유를 버리고 `None`이 된다.
+    /// 상한 검사는 여기서 새로 쓰지 않고 `from_u8`에 맡긴다.
+    fn add(self, rhs: Percent) -> Option<Percent> {
+        Self::from_u8(self.0.checked_add(rhs.0)?).ok()
+    }
+}
+
 /// 0 이상 `MAX_MONEY` 이하의 zatoshi 금액.
 ///
 /// 필드가 private이라 이 모듈 밖에서는 `from_u64`를 거쳐야만 만들 수 있다.
@@ -96,14 +115,33 @@ impl Zatoshis {
     }
 }
 
-// L03: 여기에 `impl TryFrom<u64> for Zatoshis` 블록을 쓴다. 모양은 위의 `impl TryFrom<u8> for Percent`와 같다.
 impl TryFrom<u64> for Zatoshis {
     type Error = BalanceError;
 
     fn try_from(value: u64) -> Result<Self, Self::Error> {
         Self::from_u64(value)
     }
- }
+}
+
+/// 합이 `MAX_MONEY`를 넘으면 `None`.
+impl Add for Zatoshis {
+    type Output = Option<Zatoshis>;
+
+    fn add(self, rhs: Zatoshis) -> Option<Zatoshis> {
+        // L04: 위 `impl Add for Percent`와 같은 모양으로 한 줄을 쓴다.
+        todo!("L04 ({} + {})", self.0, rhs.0)
+    }
+}
+
+/// 결과가 0보다 작아지면 `None`.
+impl Sub for Zatoshis {
+    type Output = Option<Zatoshis>;
+
+    fn sub(self, rhs: Zatoshis) -> Option<Zatoshis> {
+        // L04: `add`와 같은 모양으로 한 줄을 쓴다. 뺄셈이 0 아래로 내려가는 경우를 막는 것이 핵심이다.
+        todo!("L04 ({} - {})", self.0, rhs.0)
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -139,13 +177,19 @@ mod tests {
     fn from_u64_accepts_zero_and_cap() {
         assert_eq!(Zatoshis::from_u64(0), Ok(Zatoshis::ZERO));
         // `.map(Zatoshis::into_u64)`: `Ok` 안의 값에만 `into_u64`를 적용하고, `Err`는 그대로 둔다.
-        assert_eq!(Zatoshis::from_u64(MAX_MONEY).map(Zatoshis::into_u64), Ok(MAX_MONEY));
+        assert_eq!(
+            Zatoshis::from_u64(MAX_MONEY).map(Zatoshis::into_u64),
+            Ok(MAX_MONEY)
+        );
     }
 
     /// L02 게이트(튜터가 써 둠). 상한 바깥쪽(`MAX_MONEY + 1`과 `u64::MAX`)은 거절한다.
     #[test]
     fn from_u64_rejects_above_cap() {
-        assert_eq!(Zatoshis::from_u64(MAX_MONEY + 1), Err(BalanceError::Overflow));
+        assert_eq!(
+            Zatoshis::from_u64(MAX_MONEY + 1),
+            Err(BalanceError::Overflow)
+        );
         assert_eq!(Zatoshis::from_u64(u64::MAX), Err(BalanceError::Overflow));
     }
 
@@ -159,13 +203,35 @@ mod tests {
         assert_eq!(p, Err(BalanceError::Overflow));
     }
 
+    /// 본보기(튜터가 써 둠). `Percent`끼리의 `+`는 100까지는 `Some`, 넘으면 `None`.
+    #[test]
+    fn percent_add_stops_at_cap() {
+        // `.unwrap()`은 `Ok(v)`면 `v`를 꺼내고 `Err`면 패닉한다. 실패하지 않을 것을 아는 테스트에서만 쓴다.
+        let thirty = Percent::from_u8(30).unwrap();
+        let seventy = Percent::from_u8(70).unwrap();
+        assert_eq!(thirty + seventy, Some(Percent(100)));
+        assert_eq!(seventy + seventy, None);
+    }
+
     /// L03 게이트(튜터가 써 둠). 음수는 `Underflow`, 상한을 넘으면 그대로 `Overflow`.
     #[test]
     fn negative_is_underflow() {
-        assert_eq!(Zatoshis::from_nonnegative_i64(-1), Err(BalanceError::Underflow));
-        assert_eq!(Zatoshis::from_nonnegative_i64(i64::MIN), Err(BalanceError::Underflow));
-        assert_eq!(Zatoshis::from_nonnegative_i64(7).map(Zatoshis::into_u64), Ok(7));
-        assert_eq!(Zatoshis::from_nonnegative_i64(i64::MAX), Err(BalanceError::Overflow));
+        assert_eq!(
+            Zatoshis::from_nonnegative_i64(-1),
+            Err(BalanceError::Underflow)
+        );
+        assert_eq!(
+            Zatoshis::from_nonnegative_i64(i64::MIN),
+            Err(BalanceError::Underflow)
+        );
+        assert_eq!(
+            Zatoshis::from_nonnegative_i64(7).map(Zatoshis::into_u64),
+            Ok(7)
+        );
+        assert_eq!(
+            Zatoshis::from_nonnegative_i64(i64::MAX),
+            Err(BalanceError::Overflow)
+        );
     }
 
     /// L03 게이트(튜터가 써 둠). `Zatoshis::try_from`은 `from_u64`와 같은 답을 낸다.
@@ -174,5 +240,26 @@ mod tests {
         assert_eq!(Zatoshis::try_from(5u64), Zatoshis::from_u64(5));
         let z: Result<Zatoshis, BalanceError> = (MAX_MONEY + 1).try_into();
         assert_eq!(z, Err(BalanceError::Overflow));
+    }
+
+    /// L04 게이트(튜터가 써 둠). 덧셈은 `MAX_MONEY`에서 멈춘다.
+    #[test]
+    fn add_stops_at_cap() {
+        let one = Zatoshis::from_u64(1).unwrap();
+        let two = Zatoshis::from_u64(2).unwrap();
+        let cap = Zatoshis::from_u64(MAX_MONEY).unwrap();
+        assert_eq!(one + two, Some(Zatoshis::from_u64(3).unwrap()));
+        assert_eq!(cap + Zatoshis::ZERO, Some(cap));
+        assert_eq!(cap + one, None);
+    }
+
+    /// L04 게이트(튜터가 써 둠). 뺄셈은 0 아래로 내려가지 않는다.
+    #[test]
+    fn sub_never_goes_negative() {
+        let one = Zatoshis::from_u64(1).unwrap();
+        let two = Zatoshis::from_u64(2).unwrap();
+        assert_eq!(two - one, Some(one));
+        assert_eq!(one - one, Some(Zatoshis::ZERO));
+        assert_eq!(one - two, None);
     }
 }
