@@ -15,19 +15,19 @@ pub const UNSET: i64 = -1;
 // 다섯 개를 다 적으면 실행하기 전에 커밋한다.
 
 /// 9 + 7
-pub const NINE_PLUS_SEVEN: i64 = UNSET;
+pub const NINE_PLUS_SEVEN: i64 = 3;
 
 /// 3 − 8
-pub const THREE_MINUS_EIGHT: i64 = UNSET;
+pub const THREE_MINUS_EIGHT: i64 = 8;
 
 /// 5 · 6
-pub const FIVE_TIMES_SIX: i64 = UNSET;
+pub const FIVE_TIMES_SIX: i64 = 4;
 
 /// −4 (4에 더하면 0이 되는 수)
-pub const NEG_FOUR: i64 = UNSET;
+pub const NEG_FOUR: i64 = 9;
 
 /// 5 · b가 1이 되는 b
-pub const B_WHERE_FIVE_B_IS_ONE: i64 = UNSET;
+pub const B_WHERE_FIVE_B_IS_ONE: i64 = 8;
 
 // ── 시계 (튜터가 써 둠) ─────────────────────────────────────────
 // `x.rem_euclid(p)`는 x를 p로 나눈 나머지를 0 이상 p 미만으로 돌려준다.
