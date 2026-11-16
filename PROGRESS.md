@@ -6,7 +6,7 @@
 L07 `Fp<P>` 만들기 — 쓰기, 30분
 새로 배우는 것: const generics — 타입 매개변수 자리에 값(P)을 넣는 `Fp<const P: u64>`
 본보기: 내 L02 `Zatoshis(u64)` (private 필드 하나짜리 튜플 구조체와 검사 생성자)
-먼저 할 것: `src/value.rs`에서 `Zatoshis` 정의와 `from_u64`를 다시 읽기
+먼저 할 것: 튜터가 `src/lib.rs`의 `pub mod field;` 줄을 연 뒤, `src/value.rs`에서 `Zatoshis` 정의와 `from_u64`를 다시 읽기
 채울 곳: `src/field.rs`의 구조체 정의, `new` 본문, `zero`와 `one`
 통과 기준: `cargo test field`에서 `new_reduces_mod_p`와 `zero_one_are_reduced`가 초록
 막힌 지점: —
