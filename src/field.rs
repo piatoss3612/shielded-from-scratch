@@ -11,7 +11,8 @@
 // L07: 아래 derive 줄 앞의 `// `를 지우고, 그 바로 밑에 struct 한 줄을 쓴다.
 //      모양은 `value.rs`의 `pub struct Zatoshis(u64);`와 같다.
 //      이름 `Fp` 바로 뒤에 `<const P: u64>`가 붙는 것만 다르다.
-// #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Fp<const P: u64>(u64);
 
 // `impl<const P: u64> Fp<P>`는 "P가 무엇이든 `Fp<P>`에 아래 함수들을 붙인다"는 뜻이다.
 impl<const P: u64> Fp<P> {
@@ -19,19 +20,20 @@ impl<const P: u64> Fp<P> {
     pub fn new(value: u64) -> Self {
         // L07: 한 줄을 쓴다. `%`는 나머지 연산자다(17 % 12는 5).
         //      이 안에서 `P`는 보통 상수처럼 쓸 수 있다.
-        todo!("L07 (value = {value}, P = {P})")
+        Self(value % P)
     }
 
     /// 0. 어느 시계에나 있다.
     pub fn zero() -> Self {
         // L07: 한 줄을 쓴다.
-        todo!("L07 (zero)")
+        Self(0)
     }
 
     /// 1.
     pub fn one() -> Self {
         // L07: 한 줄을 쓴다.
-        todo!("L07 (one)")
+        Self(1)
+
     }
 
     /// 안에 든 수를 꺼낸다. 필드가 private이라 모듈 밖에서 값을 읽는 길은 이것뿐이다.
