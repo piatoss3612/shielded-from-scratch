@@ -38,6 +38,7 @@ L06 mod p 시계 — 예측, 30분
 
 ## 복습
 레벨을 깨면 다시 볼 것을 여기에 적는다.
+- 복습 페이지: https://claude.ai/artifact/9FkLLuaK2kyhsAfaTBxAyG (W1 칸과 L06 시계. 시계는 예측을 커밋한 뒤에 연다)
 - L01: `assert_eq!(a, b)`의 left와 right는 자리로 정해진다(첫째가 left, 둘째가 right). 실패하면 두 값을 다 보여 준다.
 - L01: 테스트는 빨개질 수 있어야 한다. `MAX_MONEY`를 `COIN`으로 정의했으면 테스트에서는 `COIN`을 쓰지 않는다.
 - L01: 이 깃발이 확인한 것은 체인이 아니라 "내 상수가 진짜 Zcash 코드(zcash_protocol)의 상수와 같다"는 것이다.
