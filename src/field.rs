@@ -83,7 +83,7 @@ impl<const P: u64> Mul for Fp<P> {
         // L11: 먼저 `Self(self.0 * rhs.0 % P)`라고 쓰고 `cargo test field`에서 어느 테스트가 깨지는지 본다.
         //      그다음 곱하기 전에 두 수를 `u128`로 넓힌다(`self.0 as u128`). P도 같은 타입이어야 나눌 수 있다.
         //      마지막에 결과를 `u64`로 되돌린다(`… as u64`).
-        todo!("L11 ({} * {}, P = {P})", self.0, rhs.0)
+        Self((self.0 as u128 * rhs.0 as u128 % P as u128) as u64)
     }
 }
 
