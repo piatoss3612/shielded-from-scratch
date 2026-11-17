@@ -79,10 +79,9 @@ impl<const P: u64> Sub for Fp<P> {
 impl<const P: u64> Mul for Fp<P> {
     type Output = Self;
 
+    /// `u64` 두 개를 그대로 곱하면 `u64`의 끝을 넘을 수 있어서, 곱하기 전에 `u128`로 넓힌다.
+    /// 나머지는 P 미만이고 P가 `u64`라서 마지막에 `u64`로 되돌려도 값이 잘리지 않는다.
     fn mul(self, rhs: Self) -> Self {
-        // L11: 먼저 `Self(self.0 * rhs.0 % P)`라고 쓰고 `cargo test field`에서 어느 테스트가 깨지는지 본다.
-        //      그다음 곱하기 전에 두 수를 `u128`로 넓힌다(`self.0 as u128`). P도 같은 타입이어야 나눌 수 있다.
-        //      마지막에 결과를 `u64`로 되돌린다(`… as u64`).
         Self((self.0 as u128 * rhs.0 as u128 % P as u128) as u64)
     }
 }
@@ -267,5 +266,59 @@ mod axioms {
         assert_eq!(a.into_u64(), b.into_u64());
         // 그런데 타입이 다르다. 아래 줄의 `// `를 지우면 E0308 expected `13`, found `17`이 난다.
         // assert_eq!(a, b);
+    }
+}
+
+/// W2 보스(L12). 이 월드에서 만든 `Fp`가 규칙을 다 지키는지 97칸 시계에서 빠짐없이 검사하고,
+/// 같은 규칙을 진짜 Zcash 증명 필드에도 돌려 본다. 테스트 본문은 학습자가 쓴다.
+#[cfg(test)]
+mod boss {
+    use super::*;
+    // Zcash 증명 필드의 수(L10).
+    use bls12_381::Scalar;
+
+    type F97 = Fp<97>;
+
+    /// 보스 1. 97칸 시계의 덧셈과 곱셈 규칙.
+    #[test]
+    fn fp97_ring_rules() {
+        // 배선(튜터가 써 둠).
+        let zero = F97::zero();
+        let one = F97::one();
+
+        // L12: 본보기는 `mod axioms`의 `identities`, `add_mul_commutative_associative`, `distributive`다.
+        //      같은 검사를 `F97`로 쓴다. 수는 0..97을 돈다.
+        //      하나 더한다: 모든 a에서 `a + (-a)`가 0이다.
+        todo!("L12 (규칙 검사. 0은 {zero:?}, 1은 {one:?})")
+    }
+
+    /// 보스 2. 0이 아닌 수마다 곱해서 1이 되는 짝이 있다.
+    #[test]
+    fn fp97_every_nonzero_has_inverse() {
+        // 배선(튜터가 써 둠).
+        let one = F97::one();
+
+        // L12: 1..97의 a마다, 1..97의 b를 돌며 `a * b`가 1이 되는 b를 찾는다.
+        //      찾았는지는 `let mut found = false;`에 적어 두고, 안쪽 루프가 끝난 뒤 단언한다.
+        //      mod 13에서 5의 짝은 8이었다(5 · 8 = 40 = 3 · 13 + 1).
+        todo!("L12 (짝 찾기. 1은 {one:?})")
+    }
+
+    /// 보스 3. 진짜 Zcash 증명 필드도 같은 규칙을 지킨다.
+    #[test]
+    fn scalar_follows_same_rules() {
+        // 배선(튜터가 써 둠). 작은 수 몇 개와 r − 1을 고른다.
+        let samples = [
+            Scalar::zero(),
+            Scalar::one(),
+            Scalar::from(2),
+            Scalar::from(30),
+            Scalar::zero() - Scalar::one(),
+        ];
+
+        // L12: `samples`에서 a와 b를 하나씩 골라 모든 쌍을 돈다(`for a in samples { for b in samples { … } }`).
+        //      쌍마다 `a + b`와 `b + a`, `a * b`와 `b * a`가 같은지 본다.
+        //      a마다 `a + (-a)`가 0이고 `a * Scalar::one()`이 a인지 본다.
+        todo!("L12 (진짜 필드. 표본 {}개)", samples.len())
     }
 }
