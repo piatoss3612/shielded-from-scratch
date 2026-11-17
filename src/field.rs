@@ -47,7 +47,11 @@ impl<const P: u64> Add for Fp<P> {
         // L08: `self.0 + rhs.0`은 P 이상이 될 수 있다(mod 13에서 12 + 1은 13).
         //      그럴 때 다시 P 미만으로 돌려놓는다.
         //      `%`는 쓰지 않고, 비교 한 번과 뺄셈 한 번으로 쓴다.
-        todo!("L08 ({} + {}, P = {P})", self.0, rhs.0)
+        let mut sum = self.0 + rhs.0;
+        if sum >= P {
+            sum -= P;
+        }
+        Self(sum)        
     }
 }
 
@@ -57,7 +61,7 @@ impl<const P: u64> Neg for Fp<P> {
 
     fn neg(self) -> Self {
         // L08: mod 13에서 -4는 9였다(4 + 9 = 13).
-        todo!("L08 (-{}, P = {P})", self.0)
+        Self((P - self.0) % P)
     }
 }
 
