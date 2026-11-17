@@ -3,9 +3,9 @@
 //! `clock.rs`에서는 시계의 칸 수를 함수마다 인자 `p`로 넘겼다. 여기서는 칸 수를 타입에 적어 둔다.
 //! `Fp<13>`은 13칸 시계 위의 수이고 `Fp<17>`은 17칸 시계 위의 수다. 둘은 서로 다른 타입이다.
 
-// `+`, 앞에 붙는 `-`, 사이에 오는 `-`에 딸린 트레이트.
-// 구현해 두면 `a + b`는 `add`를, `-a`는 `neg`를, `a - b`는 `sub`를 부른다.
-use std::ops::{Add, Neg, Sub};
+// `+`, 앞에 붙는 `-`, 사이에 오는 `-`, `*`에 딸린 트레이트.
+// 구현해 두면 `a + b`는 `add`를, `-a`는 `neg`를, `a - b`는 `sub`를, `a * b`는 `mul`을 부른다.
+use std::ops::{Add, Mul, Neg, Sub};
 
 /// P칸 시계 위의 수. 안에 든 값은 언제나 0 이상 P 미만이다.
 ///
@@ -75,6 +75,18 @@ impl<const P: u64> Sub for Fp<P> {
     }
 }
 
+/// 시계 위의 곱셈. 결과도 0 이상 P 미만이어야 한다.
+impl<const P: u64> Mul for Fp<P> {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self {
+        // L11: 먼저 `Self(self.0 * rhs.0 % P)`라고 쓰고 `cargo test field`에서 어느 테스트가 깨지는지 본다.
+        //      그다음 곱하기 전에 두 수를 `u128`로 넓힌다(`self.0 as u128`). P도 같은 타입이어야 나눌 수 있다.
+        //      마지막에 결과를 `u64`로 되돌린다(`… as u64`).
+        todo!("L11 ({} * {}, P = {P})", self.0, rhs.0)
+    }
+}
+
 #[cfg(test)]
 mod axioms {
     use super::*;
@@ -82,6 +94,8 @@ mod axioms {
     // `type`은 타입에 짧은 별명을 붙인다. `F13::new(14)`는 `Fp::<13>::new(14)`와 같다.
     type F13 = Fp<13>;
     type F223 = Fp<223>;
+    // 2^61 − 1. 소수이고, 여기서는 곱이 `u64`의 끝을 넘는다.
+    type F61 = Fp<2_305_843_009_213_693_951>;
 
     /// L07 게이트(튜터가 써 둠). `new`는 P 이상인 수를 감아서 넣는다.
     #[test]
@@ -156,6 +170,92 @@ mod axioms {
                 assert_eq!((a - b) + b, a, "({x} - {y}) + {y}");
             }
         }
+    }
+
+    /// L11 게이트(튜터가 써 둠). 곱이 `u64`의 끝(약 1.8 · 10^19)을 넘는 경우에도 맞는 답을 낸다.
+    #[test]
+    fn mul_does_not_overflow_u64() {
+        // `1 << 40`은 2를 40번 곱한 수다. 2^40 · 2^40 = 2^80이고, 2^61 − 1로 나눈 나머지는 2^19다.
+        assert_eq!(F61::new(1 << 40) * F61::new(1 << 40), F61::new(1 << 19));
+        // P − 1은 −1과 같은 수라서 제곱하면 1이다.
+        let p_minus_1 = F61::new(2_305_843_009_213_693_950);
+        assert_eq!(p_minus_1 * p_minus_1, F61::one());
+    }
+
+    /// L11 게이트(튜터가 써 둠). 0과 1이 하는 일.
+    #[test]
+    fn identities() {
+        for x in 0..13 {
+            let a = F13::new(x);
+            assert_eq!(a + F13::zero(), a, "{x} + 0");
+            assert_eq!(a * F13::one(), a, "{x} · 1");
+            assert_eq!(a * F13::zero(), F13::zero(), "{x} · 0");
+        }
+    }
+
+    /// L11 게이트(튜터가 써 둠). 순서를 바꾸거나 묶는 자리를 바꿔도 답이 같다.
+    #[test]
+    fn add_mul_commutative_associative() {
+        for x in 0..13 {
+            for y in 0..13 {
+                let (a, b) = (F13::new(x), F13::new(y));
+                assert_eq!(a + b, b + a, "{x} + {y}");
+                assert_eq!(a * b, b * a, "{x} · {y}");
+                for z in 0..13 {
+                    let c = F13::new(z);
+                    assert_eq!((a + b) + c, a + (b + c), "{x} + {y} + {z}");
+                    assert_eq!((a * b) * c, a * (b * c), "{x} · {y} · {z}");
+                }
+            }
+        }
+    }
+
+    /// L11 게이트(튜터가 써 둠). 곱셈을 덧셈 위로 펼칠 수 있다.
+    #[test]
+    fn distributive() {
+        for x in 0..13 {
+            for y in 0..13 {
+                for z in 0..13 {
+                    let (a, b, c) = (F13::new(x), F13::new(y), F13::new(z));
+                    assert_eq!(a * (b + c), a * b + a * c, "{x} · ({y} + {z})");
+                }
+            }
+        }
+    }
+
+    /// L11 게이트(튜터가 써 둠). 손으로 검산할 수 있는 값들.
+    #[test]
+    fn hand_checked_examples() {
+        // mod 59: 44 + 33 = 77 = 59 + 18, 9 − 29 = −20 = −59 + 39
+        assert_eq!(Fp::<59>::new(44) + Fp::<59>::new(33), Fp::<59>::new(18));
+        assert_eq!(Fp::<59>::new(9) - Fp::<59>::new(29), Fp::<59>::new(39));
+        // mod 97: 50 · 60 = 3000 = 30 · 97 + 90, 90 · 70 = 6300 = 64 · 97 + 92
+        assert_eq!(
+            Fp::<97>::new(50) * Fp::<97>::new(60) * Fp::<97>::new(70),
+            Fp::<97>::new(92)
+        );
+    }
+
+    /// 돌려 볼 것(튜터가 써 둠). 13칸 시계의 곱셈표를 찍는다.
+    /// `cargo test multiplication_table -- --nocapture`로 본다.
+    #[test]
+    fn multiplication_table() {
+        println!();
+        println!("  mod 13 곱셈표 (가로 b, 세로 a, 칸은 a · b)");
+        print!("      ");
+        for y in 0..13 {
+            print!("{y:>3}");
+        }
+        println!();
+        for x in 0..13 {
+            print!("  {x:>2} |");
+            for y in 0..13 {
+                let product = F13::new(x) * F13::new(y);
+                print!("{:>3}", product.into_u64());
+            }
+            println!();
+        }
+        println!();
     }
 
     /// L07에서 돌려 본 것(튜터가 써 둠). 주석을 풀면 타입이 달라 컴파일되지 않는다.

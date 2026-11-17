@@ -13,7 +13,8 @@ pub const UNSET_HEX: &str = "";
 // 셋을 다 적으면 실행하기 전에 튜터에게 말한다. 튜터가 커밋한 뒤에 돌린다.
 
 /// r − 1을 16진수로 적는다. `SPEC_R`과 같은 모양이다(`0x`로 시작, 소문자, 그 뒤 64자리).
-pub const R_MINUS_1_HEX: &str = "0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000000";
+pub const R_MINUS_1_HEX: &str =
+    "0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000000";
 
 /// 이 필드에서 2 − 3과 0 − 1은 같은 수인가.
 /// `None`을 지우고 같다면 `Some(true)`, 다르다면 `Some(false)`를 적는다.
@@ -50,8 +51,7 @@ mod tests {
         let zero_minus_one = Scalar::zero() - Scalar::one();
         let printed = format!("{zero_minus_one:?}");
 
-        // L10: `printed`가 내가 적은 `R_MINUS_1_HEX`와 같다고 단언하는 한 줄을 쓴다.
-        //      다 쓰면 아래 `todo!` 줄을 지운다.
+        // L10에서 학습자가 쓴 단언. 진짜 필드에서도 0 − 1은 r − 1로 감긴다.
         assert_eq!(printed, R_MINUS_1_HEX, "0 - 1이 어디로 감기는지 본다");
     }
 
