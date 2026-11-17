@@ -289,7 +289,25 @@ mod boss {
         // L12: 본보기는 `mod axioms`의 `identities`, `add_mul_commutative_associative`, `distributive`다.
         //      같은 검사를 `F97`로 쓴다. 수는 0..97을 돈다.
         //      하나 더한다: 모든 a에서 `a + (-a)`가 0이다.
-        todo!("L12 (규칙 검사. 0은 {zero:?}, 1은 {one:?})")
+        for x in 0..97 {
+            let a = F97::new(x);
+            assert_eq!(a + zero, a, "{x} + 0");
+            assert_eq!(a * one, a, "{x} · 1");
+            assert_eq!(a * zero, zero, "{x} · 0");
+            assert_eq!(a + (-a), zero, "{x} + (-{x})");
+
+            for y in 0..97 {
+                let b = F97::new(y);
+                assert_eq!(a + b, b + a, "{x} + {y}");
+                assert_eq!(a * b, b * a, "{x} · {y}");
+                for z in 0..97 {
+                    let c = F97::new(z);
+                    assert_eq!((a + b) + c, a + (b + c), "{x} + {y} + {z}");
+                    assert_eq!((a * b) * c, a * (b * c), "{x} · {y} · {z}");
+                    assert_eq!(a * (b + c), a * b + a * c, "{x} · ({y} + {z})");
+                }
+            }
+        }
     }
 
     /// 보스 2. 0이 아닌 수마다 곱해서 1이 되는 짝이 있다.
@@ -301,7 +319,18 @@ mod boss {
         // L12: 1..97의 a마다, 1..97의 b를 돌며 `a * b`가 1이 되는 b를 찾는다.
         //      찾았는지는 `let mut found = false;`에 적어 두고, 안쪽 루프가 끝난 뒤 단언한다.
         //      mod 13에서 5의 짝은 8이었다(5 · 8 = 40 = 3 · 13 + 1).
-        todo!("L12 (짝 찾기. 1은 {one:?})")
+        for x in 1..97 {
+            let a = F97::new(x);
+            let mut found = false;
+            for y in 1..97 {
+                let b = F97::new(y);
+                if a * b == one {
+                    found = true;
+                    break;
+                }
+            }
+            assert!(found, "a = {x}에 곱해서 1이 되는 b가 없다");
+        }
     }
 
     /// 보스 3. 진짜 Zcash 증명 필드도 같은 규칙을 지킨다.
@@ -319,6 +348,13 @@ mod boss {
         // L12: `samples`에서 a와 b를 하나씩 골라 모든 쌍을 돈다(`for a in samples { for b in samples { … } }`).
         //      쌍마다 `a + b`와 `b + a`, `a * b`와 `b * a`가 같은지 본다.
         //      a마다 `a + (-a)`가 0이고 `a * Scalar::one()`이 a인지 본다.
-        todo!("L12 (진짜 필드. 표본 {}개)", samples.len())
+        for a in samples {
+            for b in samples {
+                assert_eq!(a + b, b + a, "a = {a:?}, b = {b:?}");
+                assert_eq!(a * b, b * a, "a = {a:?}, b = {b:?}");
+            }
+            assert_eq!(a + (-a), Scalar::zero(), "a = {a:?}");
+            assert_eq!(a * Scalar::one(), a, "a = {a:?}");
+        }
     }
 }
