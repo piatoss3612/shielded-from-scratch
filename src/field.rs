@@ -68,9 +68,9 @@ impl<const P: u64> Neg for Fp<P> {
 impl<const P: u64> Sub for Fp<P> {
     type Output = Self;
 
+    /// `self.0 - rhs.0`이라고 그대로 빼면 0 아래로 내려갈 때 패닉한다.
+    /// 그래서 빼는 대신 `-rhs`를 더한다. `-rhs`도 0 이상 P 미만이라 어디에서도 0 아래로 내려가지 않는다.
     fn sub(self, rhs: Self) -> Self {
-        // L09: 먼저 `Self(self.0 - rhs.0)`이라고 그대로 쓰고 `cargo test field`가 어떻게 깨지는지 본다.
-        //      그다음 이미 만든 `+`와 `-a`만 써서 고친다.
         self + (-rhs)
     }
 }
@@ -134,9 +134,7 @@ mod axioms {
         a - b
     }
 
-    // L09: 여기에 테스트 `naive_u64_sub_panics`를 쓴다.
-    //      `#[test]` 밑에 `#[should_panic]`을 한 줄 더 붙이면 "패닉해야 초록"인 테스트가 된다.
-    //      본문에서는 `naive_u64_sub`에 3과 8을 넣어 부른다.
+    /// L09에서 학습자가 쓴 테스트. `#[should_panic]`이 붙은 테스트는 패닉해야 초록이다.
     #[test]
     #[should_panic]
     fn naive_u64_sub_panics() {
