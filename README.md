@@ -24,7 +24,7 @@ The tutor is Claude Code. It explains, sets up tests and scaffolding, and offers
 
 ## Where I am now
 
-**W2 · Clock Arithmetic.** I'm building numbers that wrap around at a prime P, the way hours wrap around a clock. Zcash proofs do all their arithmetic this way. This world's boss is L12, *My Fp is a field*: it's cleared when my `Fp<97>` and the real proof field's `Scalar` pass the same checks.
+**W3 · Powers and Inverses.** I'm writing exponentiation that walks the bits of the exponent, then using it to find the number that undoes a multiplication. That turns my wrap-around numbers into ones I can divide by. This world's boss is L17, *Inverses and division*: it's cleared when my `Fp` can divide by every nonzero element.
 
 The current level and anything I'm stuck on are in [PROGRESS.md](PROGRESS.md). Saying "튜터 세션 시작" (start a tutor session) to Claude Code in this repo opens that level.
 
@@ -34,10 +34,11 @@ Each cleared world fills one slot.
 
 <p>
   <img src="assets/trophy.svg" width="64" alt="Cleared world: W1 Amounts" title="W1 Amounts">
-  <img src="assets/trophy-slot.svg" width="64" alt="Empty slot: W2 Clock Arithmetic" title="W2 Clock Arithmetic">
+  <img src="assets/trophy.svg" width="64" alt="Cleared world: W2 Clock Arithmetic" title="W2 Clock Arithmetic">
+  <img src="assets/trophy-slot.svg" width="64" alt="Empty slot: W3 Powers and Inverses" title="W3 Powers and Inverses">
 </p>
 
-The next slot fills at the W2 boss, L12.
+The next slot fills at the W3 boss, L17.
 
 <details>
 <summary>Milestones along the way</summary>
