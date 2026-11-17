@@ -71,7 +71,7 @@ impl<const P: u64> Sub for Fp<P> {
     fn sub(self, rhs: Self) -> Self {
         // L09: 먼저 `Self(self.0 - rhs.0)`이라고 그대로 쓰고 `cargo test field`가 어떻게 깨지는지 본다.
         //      그다음 이미 만든 `+`와 `-a`만 써서 고친다.
-        todo!("L09 ({} - {}, P = {P})", self.0, rhs.0)
+        self + (-rhs)
     }
 }
 
@@ -137,6 +137,12 @@ mod axioms {
     // L09: 여기에 테스트 `naive_u64_sub_panics`를 쓴다.
     //      `#[test]` 밑에 `#[should_panic]`을 한 줄 더 붙이면 "패닉해야 초록"인 테스트가 된다.
     //      본문에서는 `naive_u64_sub`에 3과 8을 넣어 부른다.
+    #[test]
+    #[should_panic]
+    fn naive_u64_sub_panics() {
+        // 3 - 8은 0 아래로 내려가므로 패닉한다.
+        naive_u64_sub(3, 8);
+    }
 
     /// L09 게이트(튜터가 써 둠). 0 아래로 내려가는 뺄셈도 시계 위의 답을 낸다.
     #[test]
