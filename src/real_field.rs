@@ -10,7 +10,7 @@ pub const SPEC_R: &str = "0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffff
 pub const UNSET_HEX: &str = "";
 
 // ── 내 예측 (L10) ──────────────────────────────────────────────
-// 셋을 다 적으면 실행하기 전에 튜터에게 말한다. 튜터가 커밋한 뒤에 돌린다.
+// 실행하기 전에 적고 커밋했다(`wip: L10 scalar predictions`).
 
 /// r − 1을 16진수로 적는다. `SPEC_R`과 같은 모양이다(`0x`로 시작, 소문자, 그 뒤 64자리).
 pub const R_MINUS_1_HEX: &str =

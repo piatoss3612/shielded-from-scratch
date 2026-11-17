@@ -286,9 +286,7 @@ mod boss {
         let zero = F97::zero();
         let one = F97::one();
 
-        // L12: 본보기는 `mod axioms`의 `identities`, `add_mul_commutative_associative`, `distributive`다.
-        //      같은 검사를 `F97`로 쓴다. 수는 0..97을 돈다.
-        //      하나 더한다: 모든 a에서 `a + (-a)`가 0이다.
+        // 학습자가 쓴 검사. 교환·결합·분배는 서로 다른 a, b, c가 있어야 빨개질 수 있어서 루프가 세 겹이다.
         for x in 0..97 {
             let a = F97::new(x);
             assert_eq!(a + zero, a, "{x} + 0");
@@ -316,9 +314,8 @@ mod boss {
         // 배선(튜터가 써 둠).
         let one = F97::one();
 
-        // L12: 1..97의 a마다, 1..97의 b를 돌며 `a * b`가 1이 되는 b를 찾는다.
-        //      찾았는지는 `let mut found = false;`에 적어 두고, 안쪽 루프가 끝난 뒤 단언한다.
-        //      mod 13에서 5의 짝은 8이었다(5 · 8 = 40 = 3 · 13 + 1).
+        // 학습자가 쓴 검사. mod 13에서 5의 짝이 8이었던 것(5 · 8 = 40 = 3 · 13 + 1)을 97칸의 모든 수로 넓혔다.
+        // "곱한 결과가 다시 시계 위에 있다"(닫힘)와는 다른 성질이다.
         for x in 1..97 {
             let a = F97::new(x);
             let mut found = false;
@@ -345,9 +342,7 @@ mod boss {
             Scalar::zero() - Scalar::one(),
         ];
 
-        // L12: `samples`에서 a와 b를 하나씩 골라 모든 쌍을 돈다(`for a in samples { for b in samples { … } }`).
-        //      쌍마다 `a + b`와 `b + a`, `a * b`와 `b * a`가 같은지 본다.
-        //      a마다 `a + (-a)`가 0이고 `a * Scalar::one()`이 a인지 본다.
+        // 학습자가 쓴 검사. 표본 다섯 개로 교환, `a + (-a)`가 0, `a · 1`이 a인지 본다.
         for a in samples {
             for b in samples {
                 assert_eq!(a + b, b + a, "a = {a:?}, b = {b:?}");
